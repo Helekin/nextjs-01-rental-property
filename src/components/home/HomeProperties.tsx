@@ -1,10 +1,23 @@
 import Link from "next/link";
-import PropertyCard from "../properties/PropertyCard";
 
-import properties from "@/properties.json";
+import PropertyCard from "../property/PropertyCard";
 
-const HomeProperties = () => {
+import connectDB from "@/config/database";
+
+import Property, { PropertyLean } from "@/models/Property";
+
+const HomeProperties = async () => {
+  await connectDB();
+
+  const docs = await Property.find({}).lean();
+
+  const properties: PropertyLean[] = docs.map((doc: any) => ({
+    ...doc,
+    _id: doc._id.toString(),
+  }));
+
   const recentProperties = properties.slice(0, 3);
+
   return (
     <>
       <section className="px-4 py-6">

@@ -1,8 +1,19 @@
-import PropertyCard from "@/views/properties/PropertyCard";
+import PropertyCard from "@/components/property/PropertyCard";
 
-import properties from "@/properties.json";
+import connectDB from "@/config/database";
 
-const PropertiesPage = () => {
+import Property, { PropertyLean } from "@/models/Property";
+
+const PropertiesPage = async () => {
+  await connectDB();
+
+  const documents = await Property.find({}).lean();
+
+  const properties: PropertyLean[] = documents.map((document: any) => ({
+    ...document,
+    _id: document._id.toString(),
+  }));
+
   return (
     <section className="px-4 py-6">
       <div className="container-xl lg:container m-auto px-4 py-6">
